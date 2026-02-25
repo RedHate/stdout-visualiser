@@ -9,7 +9,7 @@
 // Alsa related definitions
 #define SAMPLE_RATE 4000
 #define CHANNELS    1
-#define FRAME_SIZE  4 //I asked ai and it says this is the best trade off between latency and bandwidth when using 8bit 4000 "32kbps" 20ms (62kb on the line)
+#define FRAME_SIZE  32
 #define FORMAT      SND_PCM_FORMAT_S16_LE
 
 int init_alsa(snd_pcm_t **handle, const char *device, snd_pcm_stream_t stream, uint32_t channels) {
