@@ -13,7 +13,7 @@
 // Alsa related definitions
 #define SAMPLE_RATE 4000
 #define CHANNELS    1
-#define FRAME_SIZE  32 //I asked ai and it says this is the best trade off between latency and bandwidth when using 8bit 4000 "32kbps" 20ms (62kb on the line)
+#define FRAME_SIZE  4 //I asked ai and it says this is the best trade off between latency and bandwidth when using 8bit 4000 "32kbps" 20ms (62kb on the line)
 #define FORMAT      SND_PCM_FORMAT_S16_LE
 
 int init_alsa(snd_pcm_t **handle, const char *device, snd_pcm_stream_t stream, uint32_t channels) {
@@ -81,7 +81,7 @@ int init_alsa(snd_pcm_t **handle, const char *device, snd_pcm_stream_t stream, u
     
 }
 
-void audio_visualiser(short *buffer, size_t size, int in_out_mode) {
+void audio_visualiser(short *buffer, size_t size, int color_mode) {
 	
 	/*
 	 * This is honestly one of the coolest things I have ever made
@@ -129,13 +129,13 @@ void audio_visualiser(short *buffer, size_t size, int in_out_mode) {
 			// Are we in bounds?
 			if((byte/32 >= 0) && (byte/32 <= 8))
 				// yes i do realise i could have done this differently but i wanted my own order to the colors.
-				printf("[%3d]%s                 | %s\033[0m\n", *(char*)&byte, (in_out_mode)? color_strings[6] : color_strings[((int)(byte/8))/2],   visualiser_array[(int)(byte/8)]);
+				printf("[%3d]%s                 | %s\033[0m\n", *(char*)&byte, (color_mode)? color_strings[6] : color_strings[((int)(byte/8))/2],   visualiser_array[(int)(byte/8)]);
 		}
 		if((byte <= 0) && (byte >= -127)) {
 			// Are we in bounds?
 			if((~byte/32 >= 0) && (~byte/32 <= 8))
 				// yes i do realise i could have done this differently but i wanted my own order to the colors.
-				printf("[%3d]%s%16s |\033[0m\n", *(char*)&byte, (in_out_mode)? color_strings[2] : color_strings[((int)(~byte/6))/2], visualiser_array[(int)(~byte/8)]);
+				printf("[%3d]%s%16s |\033[0m\n", *(char*)&byte, (color_mode)? color_strings[2] : color_strings[((int)(~byte/6))/2], visualiser_array[(int)(~byte/8)]);
 		}
 	}
 			
