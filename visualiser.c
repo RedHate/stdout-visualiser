@@ -1,7 +1,7 @@
 // start the program like visualizer plug:hw:1 plug:hw:1 
 
 
-#include <alloca.h>S
+#include <alloca.h>
 #include <time.h>
 #include <pthread.h>
 #include <alsa/asoundlib.h>
