@@ -11,9 +11,9 @@
 #include <alsa/asoundlib.h>
 
 // Alsa related definitions
-#define SAMPLE_RATE 8000
+#define SAMPLE_RATE 4000
 #define CHANNELS    1
-#define FRAME_SIZE  64 //I asked ai and it says this is the best trade off between latency and bandwidth when using 8bit 4000 "32kbps" 20ms (62kb on the line)
+#define FRAME_SIZE  32 //I asked ai and it says this is the best trade off between latency and bandwidth when using 8bit 4000 "32kbps" 20ms (62kb on the line)
 #define FORMAT      SND_PCM_FORMAT_S16_LE
 
 int init_alsa(snd_pcm_t **handle, const char *device, snd_pcm_stream_t stream, uint32_t channels) {
@@ -123,20 +123,19 @@ void audio_visualiser(short *buffer, size_t size, int in_out_mode) {
 	for(c=0;c<sizeof(buffer);c++) {
 		
 		//Type cast and reduce to 8 bit
-		char ptr = (char)(buffer[c]/255);
-		//positive value?
-		if((ptr >= 0) && (ptr <= 127)) {
+		char byte = (char)(buffer[c]/255);
+		
+		if((byte >= 0) && (byte <= 127)) {
 			// Are we in bounds?
-			if(ptr/32 <= 8)
+			if((byte/8 >= 0) && (byte/8 <= 8))
 				// yes i do realise i could have done this differently but i wanted my own order to the colors.
-				printf("[%4d]%s                 | %s\033[0m\n", ptr, (in_out_mode)? color_strings[6] : color_strings[((int)(ptr/32))],   visualiser_array[(int)(ptr/8)]);
+				printf("[%3d]%s                 | %s\033[0m\n", *(char*)&byte, (in_out_mode)? color_strings[6] : color_strings[((int)(byte/8))/2],   visualiser_array[(int)(byte/8)]);
 		}
-		//negative value?
-		else if((ptr <= 0) && (ptr >= -127)) {
+		if((byte <= 0) && (byte >= -127)) {
 			// Are we in bounds?
-			if(~ptr/32 <= 8)
+			if((~byte/8 >= 0) && (~byte/8 <= 8))
 				// yes i do realise i could have done this differently but i wanted my own order to the colors.
-				printf("[%4d]%s%16s |\033[0m\n", ptr, (in_out_mode)? color_strings[2] : color_strings[((int)(~ptr/32))], visualiser_array[(int)(~ptr/8)]);
+				printf("[%3d]%s%16s |\033[0m\n", *(char*)&byte, (in_out_mode)? color_strings[2] : color_strings[((int)(~byte/6))/2], visualiser_array[(int)(~byte/8)]);
 		}
 	}
 			
