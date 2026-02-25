@@ -127,13 +127,13 @@ void audio_visualiser(short *buffer, size_t size, int in_out_mode) {
 		
 		if((byte >= 0) && (byte <= 127)) {
 			// Are we in bounds?
-			if((byte/8 >= 0) && (byte/8 <= 8))
+			if((byte/32 >= 0) && (byte/32 <= 8))
 				// yes i do realise i could have done this differently but i wanted my own order to the colors.
 				printf("[%3d]%s                 | %s\033[0m\n", *(char*)&byte, (in_out_mode)? color_strings[6] : color_strings[((int)(byte/8))/2],   visualiser_array[(int)(byte/8)]);
 		}
 		if((byte <= 0) && (byte >= -127)) {
 			// Are we in bounds?
-			if((~byte/8 >= 0) && (~byte/8 <= 8))
+			if((~byte/32 >= 0) && (~byte/32 <= 8))
 				// yes i do realise i could have done this differently but i wanted my own order to the colors.
 				printf("[%3d]%s%16s |\033[0m\n", *(char*)&byte, (in_out_mode)? color_strings[2] : color_strings[((int)(~byte/6))/2], visualiser_array[(int)(~byte/8)]);
 		}
