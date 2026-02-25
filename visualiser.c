@@ -1,12 +1,8 @@
 // start the program like visualizer plug:hw:1 plug:hw:1 
 
 
-#include <alloca.h>
-#include <termios.h>
+#include <alloca.h>S
 #include <time.h>
-#include <arpa/inet.h>
-#include <sys/select.h>
-#include <netinet/tcp.h>
 #include <pthread.h>
 #include <alsa/asoundlib.h>
 
