@@ -129,14 +129,14 @@ void audio_visualiser(short *buffer, size_t size, int in_out_mode) {
 			// Are we in bounds?
 			if(ptr/32 <= 8)
 				// yes i do realise i could have done this differently but i wanted my own order to the colors.
-				printf("[%3d]%s                   | %s\033[0m\n", ptr, (in_out_mode)? color_strings[6] : color_strings[((int)(ptr/32))],   visualiser_array[(int)(ptr/8)]);
+				printf("[%4d]%s                 | %s\033[0m\n", ptr, (in_out_mode)? color_strings[6] : color_strings[((int)(ptr/32))],   visualiser_array[(int)(ptr/8)]);
 		}
 		//negative value?
 		else if((ptr <= 0) && (ptr >= -127)) {
 			// Are we in bounds?
 			if(~ptr/32 <= 8)
 				// yes i do realise i could have done this differently but i wanted my own order to the colors.
-				printf("[%3d]%s%18s |\033[0m\n", ptr, (in_out_mode)? color_strings[2] : color_strings[((int)(~ptr/32))], visualiser_array[(int)(~ptr/8)]);
+				printf("[%4d]%s%16s |\033[0m\n", ptr, (in_out_mode)? color_strings[2] : color_strings[((int)(~ptr/32))], visualiser_array[(int)(~ptr/8)]);
 		}
 	}
 			
