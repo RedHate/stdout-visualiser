@@ -83,7 +83,8 @@ void audio_visualiser(short *buffer, size_t size, int color_mode) {
 	 * This is honestly one of the coolest things I have ever made
 	 * such a simple thing and looks so neat
 	 */
-			
+	
+	// Visualiser array
 	char visualiser_array[16][16]={
 		"+",
 		"++",
@@ -103,6 +104,7 @@ void audio_visualiser(short *buffer, size_t size, int color_mode) {
 		"++++++++++++++++",
 	};
 	
+	// Terminal color strings
 	char color_strings[8][10]={
 		"\033[1;37m",//WHITE
 		"\033[1;34m",//BLUE
@@ -115,22 +117,23 @@ void audio_visualiser(short *buffer, size_t size, int color_mode) {
 		//"\033[0m", //NOCOLOR
 	};
 	
+	// Main visualiser loop
 	int c;
 	for(c=0;c<sizeof(buffer);c++) {
-		
-		//Type cast and reduce to 8 bit
+		// Type cast and reduce to 8 bit
 		char byte = (char)(buffer[c]/255);
-		
+		// Check upper and lower signal boundaries
 		if((byte >= 0) && (byte <= 127)) {
-			// Are we in bounds?
+			// Are we in bounds of the color array?
 			if((byte/32 >= 0) && (byte/32 <= 8))
-				// yes i do realise i could have done this differently but i wanted my own order to the colors.
+				// Print the pretty stuff
 				printf("[%3d]%s                 | %s\033[0m\n", *(char*)&byte, (color_mode)? color_strings[6] : color_strings[((int)(byte/8))/2],   visualiser_array[(int)(byte/8)]);
 		}
+		// Check upper and lower signal boundaries
 		if((byte <= 0) && (byte >= -127)) {
-			// Are we in bounds?
+			// Are we in bounds of the color array?
 			if((~byte/32 >= 0) && (~byte/32 <= 8))
-				// yes i do realise i could have done this differently but i wanted my own order to the colors.
+				// Print the pretty stuff
 				printf("[%3d]%s%16s |\033[0m\n", *(char*)&byte, (color_mode)? color_strings[2] : color_strings[((int)(~byte/6))/2], visualiser_array[(int)(~byte/8)]);
 		}
 	}
@@ -139,19 +142,26 @@ void audio_visualiser(short *buffer, size_t size, int color_mode) {
 
 int main(int argc, char *argv[]) {
 	
+	// Set up capture and plauback handles
 	snd_pcm_t *capture_handle, *playback_handle;
 	
+	// Init capture and playback devices
 	init_alsa(&capture_handle, argv[1], SND_PCM_STREAM_CAPTURE, CHANNELS);
 	init_alsa(&playback_handle, argv[2], SND_PCM_STREAM_PLAYBACK, CHANNELS);
 	
+	// Set up a buffer
 	short buffer[FRAME_SIZE*CHANNELS];
 	
+	// Get loopy!
 	while(1) {
+		// Read some samples
 		ssize_t r = snd_pcm_readi(capture_handle, buffer, sizeof(buffer));
 		if (r > 0) {
+			// Write some samples
 			snd_pcm_writei(playback_handle, buffer, r);
 			// 1 or 0 for rainbow vs pink and blue
 			int color_mode = 1;
+			// Draw the visualiser
 			audio_visualiser(buffer, r, color_mode);
 		}
 	}
