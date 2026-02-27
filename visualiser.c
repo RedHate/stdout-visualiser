@@ -85,7 +85,7 @@ void audio_visualiser(short *buffer, size_t size, int color_mode) {
 	 */
 	
 	// Visualiser array
-	char visualiser_array[16][16]={
+	char visualiser_array[32][32]={
 		"+",
 		"++",
 		"+++",
@@ -102,6 +102,22 @@ void audio_visualiser(short *buffer, size_t size, int color_mode) {
 		"++++++++++++++",
 		"+++++++++++++++",
 		"++++++++++++++++",
+	    "+++++++++++++++++",
+		"++++++++++++++++++",
+		"+++++++++++++++++++",
+		"++++++++++++++++++++",
+		"+++++++++++++++++++++",
+		"++++++++++++++++++++++",
+		"+++++++++++++++++++++++",
+		"++++++++++++++++++++++++",
+		"+++++++++++++++++++++++++",
+		"++++++++++++++++++++++++++",
+		"+++++++++++++++++++++++++++",
+		"++++++++++++++++++++++++++++",
+		"+++++++++++++++++++++++++++++",
+		"++++++++++++++++++++++++++++++",
+		"+++++++++++++++++++++++++++++++",
+		"++++++++++++++++++++++++++++++++",
 	};
 	
 	// Terminal color strings
@@ -124,17 +140,13 @@ void audio_visualiser(short *buffer, size_t size, int color_mode) {
 		char byte = (char)(buffer[c]/255);
 		// Check upper and lower signal boundaries
 		if((byte >= 0) && (byte <= 127)) {
-			// Are we in bounds of the color array?
-			if((byte/32 >= 0) && (byte/32 <= 8))
 				// Print the pretty stuff
 				printf("[%3d]%s                 | %s\033[0m\n", *(char*)&byte, (color_mode)? color_strings[6] : color_strings[((int)(byte/8))/2],   visualiser_array[(int)(byte/8)]);
 		}
 		// Check upper and lower signal boundaries
 		if((byte <= 0) && (byte >= -127)) {
-			// Are we in bounds of the color array?
-			if((~byte/32 >= 0) && (~byte/32 <= 8))
 				// Print the pretty stuff
-				printf("[%3d]%s%16s |\033[0m\n", *(char*)&byte, (color_mode)? color_strings[2] : color_strings[((int)(~byte/6))/2], visualiser_array[(int)(~byte/8)]);
+				printf("[%3d]%s%16s |\033[0m\n", *(char*)&byte, (color_mode)? color_strings[2] : color_strings[((int)(~byte/8))/2], visualiser_array[(int)(~byte/8)]);
 		}
 	}
 			
